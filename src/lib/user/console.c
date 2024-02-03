@@ -84,6 +84,10 @@ add_char (char c, void *aux_)
   aux->char_cnt++;
 }
 
+void getchar(){
+  
+}
+
 /* Flushes the buffer in AUX. */
 static void
 flush (struct vhprintf_aux *aux)

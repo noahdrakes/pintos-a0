@@ -5,8 +5,7 @@
 #include <limits.h>
 #include <random.h>
 #include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include "devices/kbd.h"
 #include "devices/input.h"
@@ -22,6 +21,7 @@
 #include "threads/palloc.h"
 #include "threads/pte.h"
 #include "threads/thread.h"
+#include "lib/kernel/console.h"
 #ifdef USERPROG
 #include "userprog/process.h"
 #include "userprog/exception.h"
@@ -29,6 +29,7 @@
 #include "userprog/syscall.h"
 #include "userprog/tss.h"
 #else
+#include <stdio.h>
 #include "tests/threads/tests.h"
 #endif
 #ifdef FILESYS
@@ -134,6 +135,39 @@ pintos_init (void)
     run_actions (argv);
   } else {
     // TODO: no command line passed to kernel. Run interactively 
+
+    #define MAX_INPUT_SIZE 100
+    char input[MAX_INPUT_SIZE];
+    char prompt[] = "\ncs318>";
+
+    while (1) {
+
+      printf("%s", prompt);
+      memset(input, '\0', strlen(input));
+      int i = 0;
+
+      while (1) {
+        char c =  input_getc();
+
+        if (c == '\r') {
+          break;
+        }
+        
+        printf("%c", c);
+
+        input[i] = c;
+        i++;
+      }  
+
+      if (strcmp(input, "exit") == 0) {
+        break;
+      } else if (strcmp(input, "whoami") == 0) {
+        printf("\nnoah drakes");
+      }  else {
+        printf("\ninvalid command");
+      }   
+  }
+    
   }
 
   /* Finish up. */
